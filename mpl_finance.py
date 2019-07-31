@@ -553,7 +553,7 @@ def candlestick2_ochl(ax, opens, closes, highs, lows, width=4,
 
 
 def candlestick2_ohlc(ax, opens, highs, lows, closes, width=4,
-                      colorup='k', colordown='r',
+                      colorup='k', colordown='r',colordoji='k',
                       alpha=0.75):
     """Represent the open, close as a bar line and high low range as a
     vertical line.
@@ -605,11 +605,20 @@ def candlestick2_ohlc(ax, opens, highs, lows, closes, width=4,
 
     colorup = mcolors.to_rgba(colorup, alpha)
     colordown = mcolors.to_rgba(colordown, alpha)
-    colord = {True: colorup, False: colordown}
-    colors = [colord[open < close]
-              for open, close in zip(opens, closes)
-              if open != -1 and close != -1]
-
+    colordoji = mcolors.to_rgba(colordoji, alpha)
+    # colord = {True: colorup, False: colordown}
+    # colors = [colord[open < close]
+              # for open, close in zip(opens, closes)
+              # if open != -1 and close != -1]
+    colors = []
+    for open, close in zip(opens, closes):
+        if open != -1 and close != -1:
+            if open < close:
+                colors.append(colorup)
+            elif open > close:
+                colors.append(colordown)
+            else:
+                colors.append(colordoji)
     useAA = 0,  # use tuple here
     lw = 0.5,   # and here
     rangeCollection = LineCollection(rangeSegments,
